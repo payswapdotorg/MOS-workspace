@@ -13,6 +13,14 @@
 
 ZCode 是 AI 编程工作台，提供桌面应用、浏览器界面和终端 Agent。本仓库包含客户端、后端服务、共享 UI，以及 Agent CLI 与运行时源码。
 
+> **MOS workspace**：本仓库是 [zai-org/zcode](https://github.com/zai-org/zcode) 的完整
+> 历史下游 fork，以**纯增量官方插件**方式加入 MOS 研究工作区（YouTube Content
+> Intelligence，产品语义来自 [payswapdotorg/MOS-4.0](https://github.com/payswapdotorg/MOS-4.0)）——
+> 不删除、不修改任何上游行为。插件位于
+> [apps/zcode-cli/packages/mos-plugin/](apps/zcode-cli/packages/mos-plugin/)，
+> 集成说明见 [docs/mos/integration-spec.md](docs/mos/integration-spec.md)，
+> 上游基线与合并策略见 [docs/mos/upstream-baseline.md](docs/mos/upstream-baseline.md)。
+
 ## 更新
 
 - **2026-11-12**：更新至 ZCode v3.18.2 版本。

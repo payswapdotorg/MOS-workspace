@@ -13,6 +13,16 @@
 
 ZCode is an AI coding workspace with desktop, browser, and terminal interfaces. This repository contains the clients, backend services, shared UI, and Agent CLI and runtime source code.
 
+> **MOS workspace**: this repository is a full-history downstream fork of
+> [zai-org/zcode](https://github.com/zai-org/zcode) that adds the MOS research
+> workspace (YouTube Content Intelligence; product semantics from
+> [payswapdotorg/MOS-4.0](https://github.com/payswapdotorg/MOS-4.0)) as a
+> **purely additive official plugin** — nothing upstream is removed or modified.
+> The plugin lives at [apps/zcode-cli/packages/mos-plugin/](apps/zcode-cli/packages/mos-plugin/);
+> see [docs/mos/integration-spec.md](docs/mos/integration-spec.md) for the integration
+> spec and [docs/mos/upstream-baseline.md](docs/mos/upstream-baseline.md) for the
+> baseline and merge policy.
+
 ## Updates
 
 - **2026-11-12**: Updated to ZCode v3.18.2.

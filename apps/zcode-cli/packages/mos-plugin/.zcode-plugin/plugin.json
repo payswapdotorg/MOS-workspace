@@ -1,0 +1,60 @@
+{
+  "name": "mos",
+  "version": "0.1.0",
+  "description": "MOS research workspace — YouTube Content Intelligence (niche → themes → discovery → ranking → evidence) behind an explicit opt-in. Official ZCode plugin; product semantics from payswapdotorg/MOS-4.0.",
+  "description_i18n": {
+    "en": "MOS research workspace — YouTube Content Intelligence (niche → themes → discovery → ranking → evidence) behind an explicit opt-in. Official ZCode plugin.",
+    "zh-CN": "MOS 研究工作区——YouTube 内容智能（细分领域 → 主题 → 发现 → 排名 → 证据），需显式开启后可用。ZCode 官方插件。"
+  },
+  "author": { "name": "PaySwap", "url": "https://payswap.org" },
+  "license": "Apache-2.0",
+  "mcpServers": {
+    "research": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${ZCODE_PLUGIN_ROOT}/dist/server.mjs"],
+      "cwd": "${ZCODE_PROJECT_DIR}",
+      "env": {
+        "MOS_RESEARCH_WORKSPACE": "${user_config.researchWorkspace}"
+      },
+      "isolation": "workspace",
+      "alwaysLoad": true
+    }
+  },
+  "ui": {
+    "surfaces": [
+      {
+        "id": "niche-explorer",
+        "title": { "en-US": "Niche Explorer", "zh-CN": "细分领域探索" },
+        "icon": "compass",
+        "server": "research",
+        "resourceUri": "ui://mos/niche-explorer.html",
+        "availability": "session"
+      },
+      {
+        "id": "scan-results",
+        "title": { "en-US": "Scan Results", "zh-CN": "扫描结果" },
+        "icon": "list",
+        "server": "research",
+        "resourceUri": "ui://mos/scan-results.html",
+        "availability": "session"
+      },
+      {
+        "id": "evidence",
+        "title": { "en-US": "Evidence", "zh-CN": "证据与来源" },
+        "icon": "receipt",
+        "server": "research",
+        "resourceUri": "ui://mos/evidence.html",
+        "availability": "session"
+      }
+    ]
+  },
+  "userConfig": {
+    "researchWorkspace": {
+      "type": "boolean",
+      "default": false,
+      "title": "Research workspace",
+      "description": "Opt in to MOS research surfaces. Off by default: no YouTube data is fetched or shown until this is enabled, and nothing is published or uploaded."
+    }
+  }
+}

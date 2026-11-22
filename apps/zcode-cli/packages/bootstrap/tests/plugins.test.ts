@@ -232,6 +232,36 @@ describe("ZCode plugins", () => {
     }
   });
 
+  it("keeps every bundled plugin package, manifest, and seed version aligned", async () => {
+    const packagesRoot = fileURLToPath(new URL("../../", import.meta.url));
+
+    for (const plugin of OFFICIAL_PLUGIN_DEFINITIONS) {
+      const packageRoot = join(packagesRoot, basename(plugin.rootCandidates[0] ?? ""));
+      const packageJson = JSON.parse(await readFile(join(packageRoot, "package.json"), "utf8")) as {
+        version: string;
+      };
+      const pluginManifest = JSON.parse(
+        await readFile(join(packageRoot, ".zcode-plugin", "plugin.json"), "utf8"),
+      ) as { version: string };
+
+      expect(
+        {
+          definition: plugin.version,
+          manifest: pluginManifest.version,
+          package: packageJson.version,
+        },
+        plugin.name,
+      ).toEqual({
+        definition: plugin.version,
+        manifest: plugin.version,
+        package: plugin.version,
+      });
+      for (const requiredSeedPath of plugin.requiredSeedPaths ?? []) {
+        expect(existsSync(join(packageRoot, ...requiredSeedPath.split("/")))).toBe(true);
+      }
+    }
+  });
+
   it("declares the ui component type exactly for bundled plugins with UI surfaces", async () => {
     const packagesRoot = fileURLToPath(new URL("../../", import.meta.url));
 

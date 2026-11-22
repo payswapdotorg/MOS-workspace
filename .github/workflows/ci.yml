@@ -1,0 +1,60 @@
+name: CI
+
+# MOS-workspace — PR/push 验证门禁。与 payswap-4.0 的 ci.yml 同款纪律：
+# 覆盖 install + workspace 构建（含 mos-plugin 产物，launch 测试依赖它）+
+# mos 插件包测试 + bootstrap 插件系统受影响测试（plugins / bundled-plugins-resilience /
+# mos-launch-path）+ architecture:check。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Linux checks (build + plugin tests + launch path)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      # 与上游验证相同的最小堆上限；2 vCPU runner 上并行 tsc 需要约束。
+      NODE_OPTIONS: --max-old-space-size=3072
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Activate pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.33.2 --activate
+          pnpm --version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.14.0
+          cache: pnpm
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+        env:
+          HUSKY: "0"
+
+      - name: Build workspace (root packages + zcode-cli; desktop runtime assets excluded)
+        # mos-plugin 的 dist/server.mjs 在此产出（mos-launch-path.test.ts 的
+        # ensureMosPluginDist 会因产物已新鲜而完全跳过写入）。
+        run: pnpm -r --workspace-concurrency=2 --filter '!@zcode/desktop' run build
+
+      - name: MOS plugin package tests
+        run: pnpm --filter @zcode/mos-plugin test
+
+      - name: Bootstrap plugin-system tests (plugins + launch path)
+        working-directory: apps/zcode-cli
+        run: pnpm --filter @zcode/bootstrap exec vitest run tests/plugins.test.ts tests/bundled-plugins-resilience.test.ts tests/mos-launch-path.test.ts
+
+      - name: Architecture check
+        run: node scripts/architecture/architecture-check.mjs check --changed

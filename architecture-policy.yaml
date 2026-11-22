@@ -1097,6 +1097,20 @@ modules:
       app: .
     owner: plugin
 
+  # mos-plugin：由 architecture:adopt 登记（MOS 研究工作区官方插件——YouTube Content
+  # Intelligence，产品语义来自 payswapdotorg/MOS-4.0；Wave 1 无宿主桥依赖）
+  - id: mos-plugin
+    roots:
+      - apps/zcode-cli/packages/mos-plugin
+    managed: true
+    requires: []
+    publicEntrypoints:
+      - apps/zcode-cli/packages/mos-plugin/index.ts
+      - apps/zcode-cli/packages/mos-plugin/contract.ts
+    layers:
+      app: .
+    owner: plugin
+
   # embedded-browser-permission：由 architecture:adopt 登记
   - id: embedded-browser-permission
     roots:

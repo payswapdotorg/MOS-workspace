@@ -526,7 +526,40 @@ export const OFFICIAL_PLUGIN_DEFINITIONS: readonly OfficialPluginDefinition[] = 
       "dist/server.mjs",
       "dist/ui/panel.html",
     ],
-    version: "0.5.0",
+    version: "0.5.1",
+  },
+  {
+    // MOS 研究工作区（YouTube Content Intelligence；产品语义来自 payswapdotorg/MOS-4.0，
+    // 以官方插件模式纯增量落地——不修改宿主任何现有行为）。defaultEnabled 保持 false：
+    // 安装后停在 S0b（installed + disabled），用户显式 enable 才进入 S1（工具注册、
+    // 全部返回 not_opted_in），在插件设置里打开 researchWorkspace 才进入 S2。
+    // Wave 1（本仓库）只有六工具注册 + typed refusals + 三个 Class A 信息面板；
+    // 数据来自 Wave 2+ 的宿主桥（MOS-4.0 的 IMosConnectionService / IMosResearchService），
+    // 本插件永不触碰凭据、配额账本或扫描数据。
+    componentTypes: ["ui"],
+    name: "mos",
+    defaultEnabled: false,
+    listing: {
+      author: { name: "PaySwap", url: "https://payswap.org" },
+      category: "productivity",
+      displayName: "MOS",
+      displayName_i18n: { "zh-CN": "MOS 研究工作区" },
+      description_i18n: {
+        "zh-CN":
+          "只读 YouTube 内容智能工作区：细分领域探索、扫描结果与证据面板。默认关闭，需在插件设置中显式开启。",
+      },
+      examplePrompts: ["Research YouTube niches for my next channel"],
+      examplePrompts_i18n: { "zh-CN": ["帮我研究下一个频道的 YouTube 细分领域"] },
+    },
+    rootCandidates: [
+      "packages/mos-plugin",
+      "../mos-plugin",
+      "../../mos-plugin",
+      "../../../mos-plugin",
+    ],
+    // 缺 server.mjs 会 seed 出能看到面板入口却启动不了 MCP server 的残缺插件。
+    requiredSeedPaths: [".zcode-plugin/plugin.json", "dist/server.mjs"],
+    version: "0.1.0",
   },
 ];
 
